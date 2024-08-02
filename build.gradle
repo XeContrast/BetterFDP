@@ -57,7 +57,7 @@ def viaLibs = [
 
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.26'
-    include "com.google.zxing:core:3.5.0"
+    include "com.google.zxing:core:3.5.3"
     include("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         transitive = false
         exclude module: "guava"
