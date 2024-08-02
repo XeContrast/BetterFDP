@@ -186,7 +186,7 @@ public abstract class MixinEntity {
         if ((Object) this != Minecraft.getMinecraft().thePlayer)
             return;
 
-        final StrafeEvent strafeEvent = new StrafeEvent(strafe, forward, friction,rotationYaw);
+        final StrafeEvent strafeEvent = new StrafeEvent(strafe, forward, friction, rotationYaw);
         final StrafeFix strafeFix = FDPClient.moduleManager.getModule(StrafeFix.class);
         //alert("Strafe: " + strafe + " Forward: " + forward + " Factor: " + friction + " DoFix: " + strafeFix.getDoFix());
         FDPClient.eventManager.callEvent(strafeEvent);
