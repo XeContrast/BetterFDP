@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 一键秒级远程热部署配置文件 -->
+<!-- 此配置文件一共两套，为hot-seconds.xml和hot-seconds-remote.xml -->
+
+<!-- 此配置文件本地改完手动保存重新打开插件开关生效 -->
+<!-- 建议直接用Run->HotSeconds Settings->Settings或者HotSecondsClient控制台的设置界面 -->
+
+<liubs>
+    <author>liubsyy</author>
+
+    <!-- 这个是本地和远程连接的唯一id，务必保证本地和远程相等 -->
+    <secret>Minecraft Client</secret>
+
+    <!-- 远程ip -->
+    <remote_ip>127.0.0.1</remote_ip>
+
+    <!-- 远程端口 -->
+    <remote_port>2023</remote_port>
+
+
+    <!-- 代理服务器, 开启后通过该服务器转发到其他服务器实现热部署 -->
+    <proxy>
+        <proxy_open>false</proxy_open>
+        <proxy_host></proxy_host>
+        <proxy_port></proxy_port>
+    </proxy>
+
+
+    <!-- 多连接源 -->
+    <connections>
+
+        <connection>
+            <name></name>
+            <secret>A</secret>
+            <ip>127.0.0.1</ip>
+            <port>2023</port>
+        </connection>
+
+
+        <!-- eg:
+        <connection>
+            <secret></secret>
+            <ip></ip>
+            <port></port>
+        </connection>
+        -->
+    </connections>
+
+
+    <!-- timeout : ms-->
+    <timeout>3000</timeout>
+
+    <!--
+        是否自动部署，如果为true则监听文件变化自动部署到远程
+        仅限于资源文件，class自动热部署因副作用太大已废弃（可通过设置快捷键代替）
+     -->
+    <auto_hotdeploy>false</auto_hotdeploy>
+
+    <!-- 本地路径和远程路径mapping关系 -->
+    <!-- ****** 填写路径path和remote-path须知 ******
+    1.file_type为上传文件的后缀,如果有多个用英文逗号隔开
+    2.path为本地路径, remote-path为远程路径
+    3.$rootPath$为本地工程根目录，remote-path需要填绝对路径
+    4.上传到远程路径的规则: ${path}/dir1/dir2/a.html ==> ${remote-path}/dir1/dir2/a.html
+    5.如果file_type是.java或.class，可不填mapping,直接热到内存生效
+    -->
+    <mappings>
+
+
+
+
+
+        <!-- 下面是两个例子，仅供参考
+         1.将src/main/webapp下的资源文件上传到远程的/opt/web/xx/webapps目录下
+         2.将target/classes目录下的.class文件上传到远程的/opt/web/xx/webapps/WEB-INF/classes目录下
+         <mapping>
+             <file_type>.html,css,js</file_type>
+             <path>$rootPath$/src/main/webapp</path>
+             <remote-path>/opt/web/xx/webapps</remote-path>
+         </mapping>
+         <mapping>
+             <file_type>.class</file_type>
+             <path>$rootPath$/target/classes</path>
+             <remote-path>/opt/web/xx/webapps/WEB-INF/classes</remote-path>
+         </mapping>
+         -->
+    </mappings>
+
+
+
+</liubs>
