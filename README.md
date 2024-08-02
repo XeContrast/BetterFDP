@@ -1,5 +1,7 @@
 # BetterFDP
 
+Follow me on BiliBili: https://space.bilibili.com/1353540064
+
 # This is Super Skid Client
 You have to admit that I haven't written any line of code myself
 
