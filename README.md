@@ -26,12 +26,13 @@ Do the above and share your source code with everyone; just like we do.
 
 ## Setting up a Workspace
 BetterFDP is using Gradle, so make sure that it is installed properly. Instructions can be found on [Gradle's website](https://gradle.org/install/).
+
 1. Clone the repository using `git clone https://github.com/XeContrast/BetterFDP.git'
 2. CD into the local repository folder.
-4. Depending on which IDE you are using execute either of the following commands:
+3. Depending on which IDE you are using execute either of the following commands:
     - For IntelliJ: `gradlew setupDevWorkspace idea genIntellijRuns build`
     - For Eclipse: `gradlew setupDevWorkspace eclipse build`
 
    (you can add `-debug` right after `gradlew` if you want to enable debug logging.)
-5. Open the folder as a Gradle project in your IDE.
-6. Select the default run configuration.
+4. Open the folder as a Gradle project in your IDE.
+5. Select the default run configuration.
