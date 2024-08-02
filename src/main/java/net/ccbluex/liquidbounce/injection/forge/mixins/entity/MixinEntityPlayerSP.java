@@ -16,7 +16,6 @@ import net.ccbluex.liquidbounce.features.module.modules.movement.InvMove;
 import net.ccbluex.liquidbounce.features.module.modules.movement.NoSlow;
 import net.ccbluex.liquidbounce.features.module.modules.movement.Sprint;
 import net.ccbluex.liquidbounce.features.module.modules.movement.StrafeFix;
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold3;
 import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold;
 import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold2;
 import net.ccbluex.liquidbounce.utils.RotationUtils;
@@ -109,16 +108,16 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
     public abstract boolean isSneaking();
 
     @Shadow
-    private double lastReportedPosX;
+    public double lastReportedPosX;
 
     @Shadow
     public int positionUpdateTicks;
 
     @Shadow
-    private double lastReportedPosY;
+    public double lastReportedPosY;
 
     @Shadow
-    private double lastReportedPosZ;
+    public double lastReportedPosZ;
 
     @Shadow
     private float lastReportedYaw;
@@ -269,10 +268,9 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
         final NoSlow noSlow = FDPClient.moduleManager.getModule(NoSlow.class);
         final KillAura killAura = FDPClient.moduleManager.getModule(KillAura.class);
         final InvMove inventoryMove = FDPClient.moduleManager.getModule(InvMove.class);
-        final Scaffold scaffold = FDPClient.moduleManager.getModule(Scaffold.class);
         final StrafeFix strafeFix = FDPClient.moduleManager.getModule(StrafeFix.class);
         final Scaffold2 scaffold2 = FDPClient.moduleManager.getModule(Scaffold2.class);
-        final Scaffold3 scaffold3 = FDPClient.moduleManager.getModule(Scaffold3.class);
+        final Scaffold scaffold = FDPClient.moduleManager.getModule(Scaffold.class);
         final Velocity veloctiy = FDPClient.moduleManager.getModule(Velocity.class);
         
         if (this.sprintingTicksLeft > 0) {
@@ -418,32 +416,29 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
                 this.setSprinting(false);
             }
         }
-        if (Objects.requireNonNull(scaffold).getState()) {
-            this.setSprinting(scaffold.getCanSprint());
-        }
         if (Objects.requireNonNull(scaffold2).getState()) {
             this.setSprinting(scaffold2.getCanSprint());
         }
-        if (Objects.requireNonNull(scaffold3).getState()) {
-            if (scaffold3.getSprintModeValue().equals("PlaceOff")) {
-                this.setSprinting(scaffold3.getRotationsValue().get() && !scaffold3.getNoHitCheckValue().get() && (!scaffold3.getFaceBlock() || !scaffold3.getPlaceModeValue().get().equals("Legit")));
+        if (Objects.requireNonNull(scaffold).getState()) {
+            if (scaffold.getSprintModeValue().equals("PlaceOff")) {
+                this.setSprinting(scaffold.getRotationsValue().get() && !scaffold.getNoHitCheckValue().get() && (!scaffold.getFaceBlock() || !scaffold.getPlaceModeValue().get().equals("Legit")));
             }
-            if (scaffold3.getSprintModeValue().equals("PlaceOn")) {
+            if (scaffold.getSprintModeValue().equals("PlaceOn")) {
                 this.setSprinting(false);
             }
-            if (scaffold3.getSprintModeValue().get().equals("off") || scaffold3.getSprintModeValue().get()
-                    .equals("ground") && !mc.thePlayer.onGround || scaffold3.getSprintModeValue().get()
+            if (scaffold.getSprintModeValue().get() == "off"|| scaffold.getSprintModeValue().get()
+                    .equals("ground") && !mc.thePlayer.onGround || scaffold.getSprintModeValue().get()
                     .equals("air") && mc.thePlayer.onGround ||
-                    scaffold3.getSprintModeValue().get().equals("tellyticks") && scaffold3.getOffGroundTicks() >= scaffold3.getTellyTicks().get() ||
-                    scaffold3.getSprintModeValue().get().equals("legit") && abs(MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw) - MathHelper.wrapAngleTo180_float(RotationUtils.targetRotation.getYaw())) > 90 || scaffold3.getSprintModeValue().get().equals("watchdogtest") && !mc.thePlayer.onGround && !scaffold3.towering())
+                    scaffold.getSprintModeValue().get().equals("tellyticks") && scaffold.getOffGroundTicks() >= scaffold.getTellyTicks().get() ||
+                    scaffold.getSprintModeValue().get().equals("legit") && abs(MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw) - MathHelper.wrapAngleTo180_float(RotationUtils.targetRotation.getYaw())) > 90 || scaffold.getSprintModeValue().get().equals("watchdogtest") && !mc.thePlayer.onGround && !scaffold.towering())
             {
                 this.setSprinting(false);
             }
-            if (scaffold3.towering()) {
-                if(scaffold3.getTowerSprintModeValue().get() == "Off"){
+            if (scaffold.towering()) {
+                if(scaffold.getTowerSprintModeValue().get() == "Off"){
                     this.setSprinting(false);
                 }
-                if(scaffold3.getTowerSprintModeValue().get() == "Always"){
+                if(scaffold.getTowerSprintModeValue().get() == "Always"){
                     this.setSprinting(true);
                 }
             }

@@ -1022,11 +1022,6 @@ class Scaffold2 : Module() {
                 mc.thePlayer.entityBoundingBox.minY + mc.thePlayer.getEyeHeight(),
                 mc.thePlayer.posZ
             )
-//                if (placeModeValue equal "Pre") { // we aren't tell server our position in pre MotionEvent, so...
-//                    Vec3(mc.thePlayer.lastReportedPosX, mc.thePlayer.lastReportedPosY, mc.thePlayer.lastReportedPosZ)
-//                } else {
-//                    mc.thePlayer.getPositionEyes(1f)
-//                }
             val lookVec = RotationUtils.bestServerRotation()!!.toDirection().multiply(5.0).add(eyesVec)
             val movingObjectPosition = mc.theWorld.rayTraceBlocks(eyesVec, lookVec, false, true, false)
             if (movingObjectPosition.blockPos != targetPlace!!.blockPos || (hitableCheck.equals( "Strict") && movingObjectPosition.sideHit != targetPlace!!.enumFacing)) {

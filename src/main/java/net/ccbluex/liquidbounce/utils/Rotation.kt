@@ -120,6 +120,9 @@ data class Rotation(var yaw: Float, var pitch: Float) {
             player.motionZ += calcForward * yawCos + calcStrafe * yawSin
         }
     }
+    fun cloneSelf(): Rotation {
+        return Rotation(yaw, pitch)
+    }
 }
 
 /**
