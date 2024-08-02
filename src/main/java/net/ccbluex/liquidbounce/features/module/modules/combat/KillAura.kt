@@ -381,8 +381,6 @@ object KillAura : Module() {
     private val throughWallsValue = BoolValue("ThroughWalls", false)
 
     private val multiCombo = BoolValue("MultiCombo", false).displayable { bypassDisplay.get() }
-    private val amountValue =
-        IntegerValue("Multi-Packet", 5, 0, 20, "x") { multiCombo.get() && bypassDisplay.get() }
 
     private val failRateValue = FloatValue("FailRate", 0f, 0f, 100f).displayable { bypassDisplay.get() }
     private val fakeSwingValue =
@@ -983,14 +981,7 @@ object KillAura : Module() {
                 continue
             }
 
-            var distance = mc.thePlayer.getDistanceToEntityBox(entity)
-            if (Backtrack.state) {
-                val trackedDistance = Backtrack.getNearestTrackedDistance(entity)
-
-                if (distance > trackedDistance) {
-                    distance = trackedDistance
-                }
-            }
+            val distance = mc.thePlayer.getDistanceToEntityBox(entity)
 
             val entityFov = RotationUtils.getRotationDifference(entity)
 
@@ -1030,15 +1021,7 @@ object KillAura : Module() {
         for (entity in inRangeDiscoveredTargets) {
             // Update rotations to current target
             if (!updateRotations(entity)) {
-                var success = false
-                Backtrack.loopThroughBacktrackData(entity) {
-                    if (updateRotations(entity)) {
-                        success = true
-                        return@loopThroughBacktrackData true
-                    }
-
-                    return@loopThroughBacktrackData false
-                }
+                val success = false
 
                 if (!success) {
                     // when failed then try another target

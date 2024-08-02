@@ -16,7 +16,7 @@ import net.ccbluex.liquidbounce.features.module.modules.movement.InvMove;
 import net.ccbluex.liquidbounce.features.module.modules.movement.NoSlow;
 import net.ccbluex.liquidbounce.features.module.modules.movement.Sprint;
 import net.ccbluex.liquidbounce.features.module.modules.movement.StrafeFix;
-import net.ccbluex.liquidbounce.features.module.modules.world.Scaffold3;
+import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold3;
 import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold;
 import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold2;
 import net.ccbluex.liquidbounce.utils.RotationUtils;

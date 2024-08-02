@@ -32,7 +32,7 @@ import net.minecraft.world.WorldSettings.GameType
 import java.util.concurrent.LinkedBlockingQueue
 
 @ModuleInfo(name = "BackTrack", category = ModuleCategory.COMBAT)
-class LegitReach : Module() {
+class BackTrack : Module() {
 
     private var fakePlayer: EntityOtherPlayerMP? = null
     private val aura = BoolValue("Aura", false)
@@ -98,7 +98,7 @@ class LegitReach : Module() {
         val thePlayer = mc.thePlayer ?: return
         thePlayer.swingItem()
         mc.netHandler.addToSendQueue(C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK))
-        if (mc.playerController.currentGameType != WorldSettings.GameType.SPECTATOR)
+        if (mc.playerController.currentGameType != GameType.SPECTATOR)
             thePlayer.attackTargetEntityWithCurrentItem(entity)
     }
 

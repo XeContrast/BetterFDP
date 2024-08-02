@@ -43,7 +43,7 @@ object AutoReport : Module() {
 
     @EventTarget
     fun onAttack(event: AttackEvent) {
-        val entity = event.targetEntity ?: return
+        val entity = event.targetEntity
         if (isTarget(entity)) {
             doReport(entity as EntityPlayer)
         }
@@ -73,7 +73,7 @@ object AutoReport : Module() {
 
     fun doReport(player: EntityPlayer) = doReport(player.name)
 
-    fun doReport(name: String): Boolean {
+    private fun doReport(name: String): Boolean {
         // pass this if reported
         if (reported.contains(name)) {
             return false

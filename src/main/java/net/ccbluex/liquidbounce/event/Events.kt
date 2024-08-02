@@ -146,7 +146,6 @@ class PacketEvent(val packet: Packet<*>, val type: Type) : CancellableEvent() {
 
     fun isServerSide() = type == Type.RECEIVE
 }
-class PacketEvent2(val packet: Packet<*>) : CancellableEvent()
 
 /**
  * Called when a block tries to push you
@@ -188,8 +187,6 @@ class TextEvent(var text: String?) : Event()
  * tick... tack... tick... tack
  */
 class TickEvent : Event()
-
-class PlayerTickEvent(val state: EventState) : CancellableEvent()
 /**
  * Called when minecraft player will be updated
  */

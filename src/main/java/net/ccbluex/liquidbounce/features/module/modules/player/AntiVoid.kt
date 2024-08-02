@@ -32,6 +32,7 @@ import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook
 import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
+import net.minecraft.world.WorldSettings
 import java.lang.Math.toRadians
 import kotlin.math.abs
 import kotlin.math.cos
@@ -139,6 +140,8 @@ object AntiVoid : Module() {
             }
 
             "searchpearl" -> {
+                if (mc.currentScreen != null || mc.playerController.currentGameType == WorldSettings.GameType.SPECTATOR
+                    || mc.playerController.currentGameType == WorldSettings.GameType.CREATIVE) return
                 val entity = getClosestEntity()
                 val distance = if (entity != null) mc.thePlayer.getDistanceToEntity(entity) else 0F
                 freeze = distance > 4 || entity == null
@@ -355,6 +358,8 @@ object AntiVoid : Module() {
     @EventTarget
     fun onMove(event: MoveEvent) {
         if (modeValue.equals("searchpearl")) {
+            if (mc.currentScreen != null || mc.playerController.currentGameType == WorldSettings.GameType.SPECTATOR
+                || mc.playerController.currentGameType == WorldSettings.GameType.CREATIVE) return
             if (!voidOnlyValue.get() || checkVoid()) {
                 if (mc.thePlayer.fallDistance > maxFallDistValue.get()) {
                     if (mc.thePlayer.heldItem!!.item is ItemEnderPearl) {
@@ -388,6 +393,8 @@ object AntiVoid : Module() {
             }
 
             "searchpearl" -> {
+                if (mc.currentScreen != null || mc.playerController.currentGameType == WorldSettings.GameType.SPECTATOR
+                    || mc.playerController.currentGameType == WorldSettings.GameType.CREATIVE) return
                 if (!voidOnlyValue.get() || checkVoid()) {
                     if (mc.thePlayer.fallDistance > maxFallDistValue.get()) {
                         if (freezeValue.equals("Cancel")) {

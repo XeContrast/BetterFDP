@@ -110,7 +110,6 @@ class Scaffold2 : Module() {
         }
     private val autoJump = BoolValue("AutoJump",false)
     private val jumpDelay = IntegerValue("AutoJumpDelay", 0, -1,5000) { autoJump.get() }
-    private val jumpWhenRotChange = BoolValue("JumpWhenRotationChange", false)
     private val speedTelly = BoolValue("SpeedTelly", false)
     private val timeToJump = MSTimer()
     private val sameYValue = BoolValue("SameY", false)
@@ -1371,8 +1370,6 @@ class Scaffold2 : Module() {
         if (target != null) {
             targetPlace = target.placeInfo
             doRotationChange(target.rotation)
-        } else if (unsafe) {
-            // TODO: If unsafe and no any search result
         }
         return true
     }

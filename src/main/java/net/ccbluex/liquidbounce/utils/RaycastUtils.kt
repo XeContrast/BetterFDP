@@ -5,7 +5,6 @@
  */
 package net.ccbluex.liquidbounce.utils
 
-import net.ccbluex.liquidbounce.features.module.modules.combat.Backtrack
 import net.ccbluex.liquidbounce.utils.RotationUtils.Companion.getVectorForRotation
 import net.ccbluex.liquidbounce.utils.RotationUtils.Companion.serverRotation
 import net.ccbluex.liquidbounce.utils.extensions.eyes
@@ -78,7 +77,6 @@ object RaycastUtils : MinecraftInstance() {
 
                 // Check newest entity first
                 checkEntity()
-                Backtrack.loopThroughBacktrackData(entity, checkEntity)
             }
 
             return pointedEntity
