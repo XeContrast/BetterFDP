@@ -36,7 +36,7 @@ class NoWeb : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if (!mc.thePlayer.isInWeb) return
-        mode.onUpdate(event)
+        mode.onUpdate()
     }
     @EventTarget
     fun onJump(event: JumpEvent) {

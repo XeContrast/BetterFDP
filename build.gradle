@@ -16,7 +16,7 @@ repositories {
     maven { url = "https://repo.viaversion.com" }
 }
 
-version = "5.4.0"
+version = "5.6.0"
 group = "org.unlegitmc.fdp"
 archivesBaseName = "FDPClient"
 

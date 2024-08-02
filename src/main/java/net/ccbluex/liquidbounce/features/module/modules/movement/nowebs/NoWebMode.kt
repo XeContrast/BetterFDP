@@ -21,7 +21,7 @@ abstract class NoWebMode(val modeName: String) : MinecraftInstance() {
 
     open fun onPreMotion() {}
     open fun onMotion(event: MotionEvent) {}
-    open fun onUpdate(event: UpdateEvent) {}
+    open fun onUpdate() {}
     open fun onMove(event: MoveEvent) {}
     open fun onJump(event: JumpEvent) {}
     open fun onPacket(event: PacketEvent) {}

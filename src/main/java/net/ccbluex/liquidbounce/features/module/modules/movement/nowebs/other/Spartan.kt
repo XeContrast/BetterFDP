@@ -1,14 +1,13 @@
 package net.ccbluex.liquidbounce.features.module.modules.movement.nowebs.other
 
 import net.ccbluex.liquidbounce.event.EventTarget
-import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.modules.movement.nowebs.NoWebMode
 import net.ccbluex.liquidbounce.utils.MovementUtils
 
 class Spartan : NoWebMode("Spartan") {
     private var usedTimer = false
     @EventTarget
-    override fun onUpdate(event: UpdateEvent) {
+    override fun onUpdate() {
         if (usedTimer) {
             mc.timer.timerSpeed = 1F
             usedTimer = false
