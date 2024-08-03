@@ -433,7 +433,7 @@ object KillAura : Module() {
     private val switchTimer = MSTimer()
     private val rotationTimer = MSTimer()
     private var attackDelay = 0L
-    private var clicks = 0
+    var clicks = 0
     private var attackTickTimes = mutableListOf<Pair<MovingObjectPosition, Int>>()
 
     // Container Delay
