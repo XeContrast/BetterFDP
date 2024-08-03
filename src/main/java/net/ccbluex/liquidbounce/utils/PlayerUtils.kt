@@ -45,7 +45,7 @@ object PlayerUtils {
         return 100 * arPercentage
     }
     fun EntityPlayer.getPing(): Int {
-        val playerInfo = MinecraftInstance.mc.netHandler.getPlayerInfo(uniqueID)
+        val playerInfo = mc.netHandler.getPlayerInfo(uniqueID)
         return playerInfo?.responseTime ?: 0
     }
     fun getHp(player : EntityLivingBase):Double{

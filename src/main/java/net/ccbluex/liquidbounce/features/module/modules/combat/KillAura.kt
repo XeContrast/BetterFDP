@@ -89,7 +89,7 @@ object KillAura : Module() {
 
     private val attackTimingValue =
         ListValue("AttackTiming", arrayOf("All", "Pre", "Post", "Both"), "All").displayable { attackDisplay.get() }
-    val sprintmode = ListValue("SprintMode", arrayOf("KeepSprint","Ground","StopSprint","StopMotion"),"KeepSprint").displayable { attackDisplay.get() }
+    val sprintmode = ListValue("SprintMode", arrayOf("KeepSprint","Ground","StopSprint","StopMotion","Normal"),"KeepSprint").displayable { attackDisplay.get() }
 
     private val hitselectValue = BoolValue("HitSelect", false).displayable { attackDisplay.get() }
     private val hitselectRangeValue = FloatValue(

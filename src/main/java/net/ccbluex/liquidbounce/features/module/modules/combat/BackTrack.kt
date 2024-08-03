@@ -133,8 +133,8 @@ class BackTrack : Module() {
     private var attacked : Entity? = null
 
     private var smoothPointer = System.nanoTime()
-    var needFreeze = false
-    var reversing = false
+    private var needFreeze = false
+    private var reversing = false
 
     //    @EventTarget
     // for safety, see in met.minecraft.network.NetworkManager
@@ -558,7 +558,7 @@ class BackTrack : Module() {
         else releasePacket(bestTimeStamp)
     }
 
-    fun stopReverse() {
+    private fun stopReverse() {
         if (storageSendPackets.isEmpty()) return
         while (storageSendPackets.isNotEmpty()) {
             storageSendPackets.removeAt(0).let {
@@ -596,4 +596,7 @@ class BackTrack : Module() {
     private data class EntityPacketLoc(val entity: Entity, val x: Double, val y: Double, val z: Double) {
         val time = System.nanoTime()
     }
+
+    override val tag: String
+        get() = mc.thePlayer.getPing().toString()
 }

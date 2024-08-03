@@ -58,7 +58,7 @@ public abstract class MixinNetworkManager {
         if (this.channel.isOpen()) {
             try {
                 p_channelRead0_2_.processPacket(this.packetListener);
-            } catch (ThreadQuickExitException var4) {
+            } catch (ThreadQuickExitException ignored) {
             }
         }
     }
