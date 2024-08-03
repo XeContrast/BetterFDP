@@ -6,6 +6,7 @@ import net.ccbluex.liquidbounce.utils.MinecraftInstance.mc
 import net.ccbluex.liquidbounce.utils.extensions.eyes
 import net.minecraft.block.BlockSlime
 import net.minecraft.client.entity.EntityPlayerSP
+import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemBlock
@@ -32,6 +33,11 @@ object PlayerUtils {
     fun getIncremental(`val`: Double, inc: Double): Double {
         val one = 1.0 / inc
         return Math.round(`val` * one) / one
+    }
+    fun Entity.getLookDistanceToEntityBox(entity: Entity =this, rotation: Rotation? = null, range: Double=10.0): Double {
+        val eyes = this.eyes
+        val end = (rotation?: RotationUtils.bestServerRotation())!!.toDirection().multiply(range).add(eyes)
+        return entity.entityBoundingBox.calculateIntercept(eyes, end)?.hitVec?.distanceTo(eyes) ?: Double.MAX_VALUE
     }
     fun getAr(player : EntityLivingBase):Double{
         var arPercentage: Double = (player.totalArmorValue / player.maxHealth).toDouble()

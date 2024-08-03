@@ -6,14 +6,11 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.handler.timeout.ReadTimeoutHandler;
+import net.ccbluex.liquidbounce.features.module.modules.combat.BackTrack;
 import net.ccbluex.liquidbounce.FDPClient;
 import net.ccbluex.liquidbounce.event.PacketEvent;
-import net.ccbluex.liquidbounce.features.module.modules.combat.FakeLag;
-import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura;
 import net.ccbluex.liquidbounce.handler.network.ProxyManager;
-import net.ccbluex.liquidbounce.utils.BlinkUtils;
 import net.ccbluex.liquidbounce.utils.ClientUtils;
-import net.ccbluex.liquidbounce.utils.PacketUtils;
 import net.minecraft.network.*;
 import net.minecraft.util.MessageDeserializer;
 import net.minecraft.util.MessageDeserializer2;
@@ -39,15 +36,19 @@ public abstract class MixinNetworkManager {
     private INetHandler packetListener;
     /**
      * show player head in tab bar
+     * @author
+     * @reason
      */
     @Overwrite
     protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) {
-        PacketEvent event = new PacketEvent(p_channelRead0_2_, PacketEvent.Type.RECEIVE);
-        KillAura killaura = FDPClient.moduleManager.getModule(KillAura.class);
-        if ((FakeLag.INSTANCE.getState() && (FakeLag.INSTANCE.getModeValue().equals("Automatic") || FakeLag.INSTANCE.getModeValue().equals("Manual")))) {
+        final PacketEvent event = new PacketEvent(p_channelRead0_2_,PacketEvent.Type.SEND);
+        BackTrack backTrack = FDPClient.moduleManager.getModule(BackTrack.class);
+        assert backTrack != null;
+        if (backTrack.getState()) {
             try {
-                FakeLag.INSTANCE.fakeLagPacket(event);
-            } catch (Exception ignored) {
+                backTrack.onPacket(event);
+            } catch (Exception e) {
+                //Minecraft.logger.error("Exception caught in BackTrack", e);
             }
         }
         FDPClient.eventManager.callEvent(event);
@@ -64,17 +65,20 @@ public abstract class MixinNetworkManager {
 
     @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void send(Packet<?> packet, CallbackInfo callback) {
-        final PacketEvent event = new PacketEvent(packet, PacketEvent.Type.SEND);
-        if(PacketUtils.INSTANCE.getPacketType(packet) != PacketUtils.PacketType.CLIENTSIDE)
-            return;
+        final PacketEvent event = new PacketEvent(packet,PacketEvent.Type.SEND);
+        BackTrack backTrack = FDPClient.moduleManager.getModule(BackTrack.class);
+        assert backTrack != null;
+        if (backTrack.getState()) {
+            try {
+                backTrack.onPacket(event);
+            } catch (Exception e) {
+                //Minecraft.logger.error("Exception caught in BackTrack", e);
+            }
+        }
+        FDPClient.eventManager.callEvent(event);
 
-        if(!PacketUtils.INSTANCE.handleSendPacket(packet)){
-            FDPClient.eventManager.callEvent(event);
-
-            if(event.isCancelled()) {
-                callback.cancel();
-            } else if (BlinkUtils.INSTANCE.pushPacket(packet))
-                callback.cancel();
+        if(event.isCancelled()) {
+            callback.cancel();
         }
     }
 
