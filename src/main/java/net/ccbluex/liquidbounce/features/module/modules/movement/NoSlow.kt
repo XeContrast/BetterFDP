@@ -39,6 +39,7 @@ object NoSlow : Module() {
         "Bug",
         "WatchDog",
         "WatchDog2",
+        "UNCP",
         "NCP",
         "AAC",
         "AAC4",
@@ -76,7 +77,7 @@ object NoSlow : Module() {
     private val consumeModifyValue = BoolValue("Consume", true)
     private val consumePacketValue = ListValue(
         "ConsumePacket",
-        arrayOf("None", "AAC5", "SpamItemChange", "SpamPlace", "SpamEmptyPlace", "Glitch", "Grim","Bug","IntaveFood","InvalidC08", "Packet"),
+        arrayOf("None", "AAC5", "SpamItemChange", "SpamPlace", "SpamEmptyPlace","UNCP", "Glitch", "Grim","Bug","IntaveFood","InvalidC08", "Packet"),
         "None"
     ).displayable { consumeModifyValue.get() }
     private val conmode = ListValue("BugMode", arrayOf("C07","C16"),"C07")
@@ -89,7 +90,7 @@ object NoSlow : Module() {
     private val bowModifyValue = BoolValue("Bow", true)
     private val bowPacketValue = ListValue(
         "BowPacket",
-        arrayOf("None", "AAC5", "SpamItemChange", "SpamPlace", "SpamEmptyPlace", "Glitch", "Grim","InvalidC08", "Packet"),
+        arrayOf("None", "AAC5", "SpamItemChange", "SpamPlace", "SpamEmptyPlace","UNCP", "Glitch", "Grim","InvalidC08", "Packet"),
         "None"
     ).displayable { bowModifyValue.get() }
     private val bowTimingValue =
@@ -147,6 +148,8 @@ object NoSlow : Module() {
     private var mstimer2 = MSTimer()
     //hypixel
     private var postPlace = false
+    //UNCP
+    private var shouldSwap = false
 
     override fun onEnable() {
         start = false
@@ -155,6 +158,7 @@ object NoSlow : Module() {
     }
 
     override fun onDisable() {
+        shouldSwap = false
         bugt = 0
         matrixcheck.reset()
         msTimer.reset()
@@ -212,6 +216,7 @@ object NoSlow : Module() {
     }
 
     private fun sendPacket2(packetType: String) {
+        val isUsingItem = usingItemFunc()
         when (packetType.lowercase()) {
             "aac5" -> {
                 mc.netHandler.addToSendQueue(
@@ -267,6 +272,13 @@ object NoSlow : Module() {
             }
             "intavefood" -> {
                 if (start) PacketUtils.sendPacketNoEvent(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,BlockPos.ORIGIN,EnumFacing.UP))
+            }
+            "uncp" -> {
+                if (start && (shouldSwap)) {
+                    mc.netHandler.addToSendQueue(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9))
+                    PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 255, mc.thePlayer.heldItem, 0f, 0f, 0f))
+                    shouldSwap = false
+                }
             }
 
             "grim" -> {
@@ -380,6 +392,17 @@ object NoSlow : Module() {
                                 0f,
                                 0f,
                                 0f
+                            )
+                        )
+                    }
+                }
+                "UNCP" -> {
+                    if (event.eventState == EventState.POST && usingItemFunc()) {
+                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9))
+                        PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 255, mc.thePlayer.heldItem, 0f, 0f, 0f))
+                        PacketUtils.sendPacketNoEvent(
+                            C08PacketPlayerBlockPlacement(
+                                BlockPos(-1, -1, -1), 255, mc.thePlayer.heldItem, 0f, 0f, 0f
                             )
                         )
                     }
@@ -660,6 +683,15 @@ object NoSlow : Module() {
                 }
             }
         }
+        when (packet) {
+            is C08PacketPlayerBlockPlacement -> {
+                if (packet.stack?.item != null && mc.thePlayer.heldItem?.item != null && packet.stack.item == mc.thePlayer.heldItem?.item) {
+                    if ((consumePacketValue.get() == "UNCP" && (packet.stack.item is ItemFood || packet.stack.item is ItemPotion || packet.stack.item is ItemBucketMilk)) || (bowPacketValue.get() == "UNCP" && packet.stack.item is ItemBow)) {
+                        shouldSwap = true;
+                    }
+                }
+            }
+        }
 
         if (antiSwitchItem.get() && packet is S09PacketHeldItemChange && (mc.thePlayer.isUsingItem || mc.thePlayer.isBlocking)) {
             event.cancelEvent()
@@ -750,6 +782,8 @@ object NoSlow : Module() {
             }
         }
     }
+    private fun isUNCPBlocking() = modeValue.get() == "UNCP" && mc.gameSettings.keyBindUseItem.isKeyDown && (mc.thePlayer.heldItem?.item is ItemSword)
+    fun usingItemFunc() = mc.thePlayer?.heldItem != null && (mc.thePlayer.isUsingItem || (mc.thePlayer.heldItem?.item is ItemSword && KillAura.blockingStatus) || isUNCPBlocking())
 
     override val tag: String
         get() = modeValue.get()
