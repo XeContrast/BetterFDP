@@ -80,7 +80,7 @@ object NoSlow : Module() {
         arrayOf("None", "AAC5", "SpamItemChange", "SpamPlace", "SpamEmptyPlace","UNCP", "Glitch", "Grim","Bug","IntaveFood","InvalidC08", "Packet"),
         "None"
     ).displayable { consumeModifyValue.get() }
-    private val conmode = ListValue("BugMode", arrayOf("C07","C16"),"C07")
+    private val conmode = ListValue("BugMode", arrayOf("C07","C16"),"C07").displayable { consumePacketValue.equals("Bug")}
     private val consumeTimingValue =
         ListValue("ConsumeTiming", arrayOf("Pre", "Post"), "Pre").displayable { consumeModifyValue.get() }
     private val consumeForwardMultiplier =

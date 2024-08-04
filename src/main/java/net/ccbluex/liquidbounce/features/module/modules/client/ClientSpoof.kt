@@ -21,7 +21,7 @@ object ClientSpoof : Module() {
     val render = BoolValue("Render", true)
 
     fun getButtonRenderer(button: GuiButton): AbstractButtonRenderer? {
-        return when (ClientSpoof.buttonValue.get().lowercase()) {
+        return when (buttonValue.get().lowercase()) {
             "better" -> BetterButtonRenderer(button)
             "rounded" -> RoundedButtonRenderer(button)
             "fline" -> FLineButtonRenderer(button)

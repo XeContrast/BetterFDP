@@ -6,6 +6,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.handler.timeout.ReadTimeoutHandler;
+import net.ccbluex.liquidbounce.features.module.modules.client.HUD;
 import net.ccbluex.liquidbounce.features.module.modules.combat.BackTrack;
 import net.ccbluex.liquidbounce.FDPClient;
 import net.ccbluex.liquidbounce.event.PacketEvent;
@@ -112,5 +113,16 @@ public abstract class MixinNetworkManager {
 
         cir.setReturnValue(networkmanager);
         cir.cancel();
+    }
+    /**
+     * show player head in tab bar
+     * @author Liulihaocai, FDPClient
+     */
+    @Inject(method = "getIsencrypted", at = @At("HEAD"), cancellable = true)
+    private void injectEncryption(CallbackInfoReturnable<Boolean> cir) {
+        final HUD hud = FDPClient.moduleManager.getModule(HUD.class);
+        if(hud != null && hud.getTabHead().get()) {
+            cir.setReturnValue(true);
+        }
     }
 }

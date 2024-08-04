@@ -17,6 +17,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 
+import java.util.Objects;
+
 public class ClientSpoof extends MinecraftInstance implements Listenable {
 
     public static final boolean enabled = true;
@@ -26,7 +28,7 @@ public class ClientSpoof extends MinecraftInstance implements Listenable {
         final Packet<?> packet = event.getPacket();
         final net.ccbluex.liquidbounce.features.module.modules.client.ClientSpoof clientSpoof = FDPClient.moduleManager.getModule(net.ccbluex.liquidbounce.features.module.modules.client.ClientSpoof.class);
 
-        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.getModeValue().equals("Vanilla")) {
+        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && Objects.requireNonNull(clientSpoof).getModeValue().equals("Vanilla")) {
             try {
                 if (packet.getClass().getName().equals("net.minecraftforge.fml.common.network.internal.FMLProxyPacket"))
                     event.cancelEvent();
@@ -44,7 +46,7 @@ public class ClientSpoof extends MinecraftInstance implements Listenable {
             }
         }
 
-        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.getModeValue().equals("LabyMod")) {
+        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && Objects.requireNonNull(clientSpoof).getModeValue().equals("LabyMod")) {
             try {
 
                 if (packet.getClass().getName().equals("net.minecraftforge.fml.common.network.internal.FMLProxyPacket"))
@@ -64,7 +66,7 @@ public class ClientSpoof extends MinecraftInstance implements Listenable {
             }
         }
 
-        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.getModeValue().equals("CheatBreaker")) {
+        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && Objects.requireNonNull(clientSpoof).getModeValue().equals("CheatBreaker")) {
             try {
                 if (packet.getClass().getName().equals("net.minecraftforge.fml.common.network.internal.FMLProxyPacket"))
                     event.cancelEvent();
@@ -82,7 +84,7 @@ public class ClientSpoof extends MinecraftInstance implements Listenable {
             }
         }
 
-        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.getModeValue().equals("PvPLounge")) {
+        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && Objects.requireNonNull(clientSpoof).getModeValue().equals("PvPLounge")) {
             try {
                 if (packet.getClass().getName().equals("net.minecraftforge.fml.common.network.internal.FMLProxyPacket"))
                     event.cancelEvent();

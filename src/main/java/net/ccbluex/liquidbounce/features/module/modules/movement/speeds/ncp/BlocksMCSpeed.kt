@@ -23,8 +23,8 @@ class BlocksMCSpeed : SpeedMode("BlocksMC") {
                     MovementUtils.strafe(0.39f)
                 }
             } else {
-                if (MovementUtils.getSpeed() < 0.125f) {
-                    MovementUtils.strafe(0.125f)
+                if (MovementUtils.getSpeed() < 0.25f) {
+                    MovementUtils.strafe(0.25f)
                 }
             }
             if (strafe.get()) {
