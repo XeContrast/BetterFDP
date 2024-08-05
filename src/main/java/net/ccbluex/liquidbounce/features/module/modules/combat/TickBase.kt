@@ -1,5 +1,6 @@
 package net.ccbluex.liquidbounce.features.module.modules.combat
 
+import net.ccbluex.liquidbounce.FDPClient
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
@@ -68,6 +69,7 @@ object TickBase : Module() {
     private val lookThreshold = FloatValue("LookThreshold", 0.5f, 0.1f,1f).displayable { timerBoostMode.get() == "SmartMove" }
 
     // Optional
+    private val onlykillaura = BoolValue("OnlyKillaura",false)
     private val resetOnlagBack = BoolValue("ResetOnLagback", false)
     private val resetOnKnockback = BoolValue("ResetOnKnockback", false)
     private val chatDebug = BoolValue("ChatDebug", true).displayable { resetOnlagBack.get() || resetOnKnockback.get() }
@@ -85,6 +87,12 @@ object TickBase : Module() {
         smartTick = 0
         cooldownTick = 0
         playerTicks = 0
+    }
+    @EventTarget
+    fun onTick(event: TickEvent) {
+        if (onlykillaura.get() && !FDPClient.moduleManager[KillAura::class.java]!!.state) {
+            return
+        }
     }
 
     @EventTarget
@@ -290,6 +298,6 @@ object TickBase : Module() {
     /**
      * HUD Tag
      */
-    override val tag: String?
+    override val tag: String
         get() = timerBoostMode.get()
 }
