@@ -15,9 +15,9 @@ import net.ccbluex.liquidbounce.features.value.ListValue
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
 import net.ccbluex.liquidbounce.utils.EntityUtils
+import net.ccbluex.liquidbounce.utils.EntityUtils.getLookDistanceToEntityBox
 import net.ccbluex.liquidbounce.utils.PacketUtils
 import net.ccbluex.liquidbounce.utils.PacketUtils.packets
-import net.ccbluex.liquidbounce.utils.PlayerUtils.getLookDistanceToEntityBox
 import net.ccbluex.liquidbounce.utils.PlayerUtils.getLookingTargetRange
 import net.ccbluex.liquidbounce.utils.PlayerUtils.getPing
 import net.ccbluex.liquidbounce.utils.Rotation

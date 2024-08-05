@@ -263,6 +263,7 @@ class Scaffold : Module() {
     // WATCHDOG
     private var wdTick = 0
     private var wdSpoof = false
+    private var hypixelPlaceTicks = false
 
     // update event fix
     private var lastTick = 0
@@ -284,6 +285,7 @@ class Scaffold : Module() {
         delayTimer.reset()
         zitterTimer.reset()
         clickTimer.reset()
+        hypixelPlaceTicks = false
     }
 
     /**
@@ -346,7 +348,13 @@ class Scaffold : Module() {
                     canSameY = FDPClient.moduleManager[Speed::class.java]!!.state
                 }
                 "hypixel" -> {
-                    canSameY = mc.thePlayer.ticksExisted % 11 > 4
+                    canSameY = true
+                    if (MovementUtils.isMoving() && mc.thePlayer.onGround) {
+                        hypixelPlaceTicks = false
+                        mc.thePlayer.jump()
+                    } else {
+                        hypixelPlaceTicks = true
+                    }
                 }
                 else -> {
                     canSameY = false
@@ -1204,7 +1212,14 @@ class Scaffold : Module() {
      * @return
      */
     private fun search(blockPosition: BlockPos, checks: Boolean): Boolean {
-        if (!isReplaceable(blockPosition)) return false
+        val hypixelBlockPos: BlockPos = (
+            if (sameYValue.equals("Hypixel")) BlockPos(
+                blockPosition.x,
+                blockPosition.y + 1,
+                blockPosition.z
+            ) else blockPosition
+                )
+        if (!isReplaceable(hypixelBlockPos)) return false
         val eyesPos = Vec3(
             mc.thePlayer.posX,
             mc.thePlayer.entityBoundingBox.minY + mc.thePlayer.getEyeHeight(),
@@ -1217,7 +1232,7 @@ class Scaffold : Module() {
             )
         }
         for (side in StaticStorage.facings()) {
-            val neighbor = blockPosition.offset(side)
+            val neighbor = hypixelBlockPos.offset(side)
             if (!BlockUtils.canBeClicked(neighbor)) continue
             val dirVec = Vec3(side.directionVec)
             var xSearch = 0.1
@@ -1226,7 +1241,7 @@ class Scaffold : Module() {
                 while (ySearch < 0.9) {
                     var zSearch = 0.1
                     while (zSearch < 0.9) {
-                        val posVec = Vec3(blockPosition).addVector(xSearch, ySearch, zSearch)
+                        val posVec = Vec3(hypixelBlockPos).addVector(xSearch, ySearch, zSearch)
                         val distanceSqPosVec = eyesPos.squareDistanceTo(posVec)
                         val hitVec = posVec.add(Vec3(dirVec.xCoord * 0.5, dirVec.yCoord * 0.5, dirVec.zCoord * 0.5))
                         if (checks && (eyesPos.squareDistanceTo(hitVec) > 18.0 || distanceSqPosVec > eyesPos.squareDistanceTo(

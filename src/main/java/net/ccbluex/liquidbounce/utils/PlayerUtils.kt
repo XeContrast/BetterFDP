@@ -34,11 +34,6 @@ object PlayerUtils {
         val one = 1.0 / inc
         return Math.round(`val` * one) / one
     }
-    fun Entity.getLookDistanceToEntityBox(entity: Entity =this, rotation: Rotation? = null, range: Double=10.0): Double {
-        val eyes = this.eyes
-        val end = (rotation?: RotationUtils.bestServerRotation())!!.toDirection().multiply(range).add(eyes)
-        return entity.entityBoundingBox.calculateIntercept(eyes, end)?.hitVec?.distanceTo(eyes) ?: Double.MAX_VALUE
-    }
     fun getAr(player : EntityLivingBase):Double{
         var arPercentage: Double = (player.totalArmorValue / player.maxHealth).toDouble()
         arPercentage = MathHelper.clamp_double(arPercentage, 0.0, 1.0)

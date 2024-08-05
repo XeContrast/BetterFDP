@@ -18,6 +18,7 @@ import net.ccbluex.liquidbounce.features.module.modules.movement.Sprint;
 import net.ccbluex.liquidbounce.features.module.modules.movement.StrafeFix;
 import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold;
 import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold2;
+import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.Scaffold3;
 import net.ccbluex.liquidbounce.utils.RotationUtils;
 import net.ccbluex.liquidbounce.utils.MovementUtils;
 import net.minecraft.block.Block;
@@ -271,6 +272,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
         final StrafeFix strafeFix = FDPClient.moduleManager.getModule(StrafeFix.class);
         final Scaffold2 scaffold2 = FDPClient.moduleManager.getModule(Scaffold2.class);
         final Scaffold scaffold = FDPClient.moduleManager.getModule(Scaffold.class);
+        final Scaffold3 scaffold3 = FDPClient.moduleManager.getModule(Scaffold3.class);
         final Velocity veloctiy = FDPClient.moduleManager.getModule(Velocity.class);
         
         if (this.sprintingTicksLeft > 0) {
@@ -421,6 +423,9 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
         }
         if (Objects.requireNonNull(scaffold).getState()) {
             this.setSprinting(scaffold.getCanSprint());
+        }
+        if (Objects.requireNonNull(scaffold3).getState()) {
+            this.setSprinting(scaffold3.getSprintActive());
         }
         if ((killAura != null && killAura.getState()) && MovementUtils.INSTANCE.isMoving() && killAura.getCurrentTarget() != null) {
             if (killAura.getSprintmode().equals("Ground")) {

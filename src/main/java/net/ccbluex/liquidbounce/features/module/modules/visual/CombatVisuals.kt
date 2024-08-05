@@ -32,6 +32,7 @@ import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils.drawEntityBox
 import net.ccbluex.liquidbounce.utils.render.RenderUtils.drawPlatform
 import net.minecraft.block.Block
+import net.minecraft.client.audio.PositionedSoundRecord
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -40,6 +41,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.network.play.server.S2CPacketSpawnGlobalEntity
 import net.minecraft.potion.Potion
 import net.minecraft.util.EnumParticleTypes
+import net.minecraft.util.ResourceLocation
 import java.awt.Color
 import java.util.*
 
@@ -228,7 +230,10 @@ object CombatVisuals : Module() {
             "Orb" -> player.playSound("random.orb", volume.get(), pitch.get())
             "Pop" -> player.playSound("random.pop", volume.get(), pitch.get())
             "Splash" -> player.playSound("random.splash", volume.get(), pitch.get())
-            "Lightning" -> player.playSound("ambient.weather.thunder", volume.get(), pitch.get())
+            "Lightning" -> {
+                mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("random.explode"), 1.0f))
+                mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("ambient.weather.thunder"), 1.0f))
+            }
             "Explode" -> player.playSound("random.explode", volume.get(), pitch.get())
         }
     }

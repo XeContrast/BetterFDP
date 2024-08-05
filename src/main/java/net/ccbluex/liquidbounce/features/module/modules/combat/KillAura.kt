@@ -1096,7 +1096,12 @@ object KillAura : Module() {
 
                 "keyblock" -> mc.gameSettings.keyBindUseItem.pressed = false
                 "legit", "test", "holdkey", "Legit2" -> null
-                "Hypixel" -> mc.gameSettings.keyBindUseItem.pressed = true
+                "Hypixel" -> {
+                    val curritem = mc.thePlayer.inventory.currentItem
+                    val nextitem = (curritem + 1) % 9
+                    mc.netHandler.addToSendQueue(C09PacketHeldItemChange(nextitem))
+                    mc.netHandler.addToSendQueue(C09PacketHeldItemChange(curritem))
+                }
                 else -> null
             }
         }
@@ -1112,7 +1117,7 @@ object KillAura : Module() {
                     return
                 }
                 when (autoBlockPacketValue.get().lowercase()) {
-                    "vanilla", "afterattack", "oldintave" -> startBlocking(
+                    "vanilla", "afterattack", "oldintave","hypixel" -> startBlocking(
                         entity,
                         interactAutoBlockValue.get() && (mc.thePlayer.getDistanceToEntityBox(entity) < maxRange)
                     )

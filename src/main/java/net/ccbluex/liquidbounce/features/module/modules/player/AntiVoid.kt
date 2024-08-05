@@ -94,6 +94,7 @@ object AntiVoid : Module() {
     private var lagbackDetected = false
     private var fall = 0F
     private var lastPositon = intArrayOf(0, 0, 0)
+    private var ticks = 0
 
     override fun onEnable() {
         fall = 0f
@@ -112,6 +113,7 @@ object AntiVoid : Module() {
         }
         tried = false
         flagged = false
+        ticks = 0
     }
 
     override fun onDisable() {
@@ -359,20 +361,23 @@ object AntiVoid : Module() {
     fun onMove(event: MoveEvent) {
         if (modeValue.equals("searchpearl")) {
             if (mc.currentScreen != null || mc.playerController.currentGameType == WorldSettings.GameType.SPECTATOR
-                || mc.playerController.currentGameType == WorldSettings.GameType.CREATIVE) return
+                || mc.playerController.currentGameType == WorldSettings.GameType.CREATIVE
+            ) return
             if (!voidOnlyValue.get() || checkVoid()) {
                 if (mc.thePlayer.fallDistance > maxFallDistValue.get()) {
                     if (mc.thePlayer.heldItem!!.item is ItemEnderPearl) {
                         if (freezeValue.equals("Cancel")) {
                             event.cancelEvent()
                         } else {
+                            ticks = 0
                             mc.timer.timerSpeed = 0.1f
                         }
                     }
                 }
             } else {
                 if (!freezeValue.equals("Cancel")) {
-                    if (!FDPClient.moduleManager[Timer::class.java]!!.state) {
+                        ticks ++
+                    if (ticks == 1) {
                         mc.timer.timerSpeed = 1f
                     }
                 }

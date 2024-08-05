@@ -5,6 +5,7 @@
  */
 package net.ccbluex.liquidbounce.utils
 
+import kevin.utils.multiply
 import net.ccbluex.liquidbounce.FDPClient
 import net.ccbluex.liquidbounce.features.module.modules.client.Target.animalValue
 import net.ccbluex.liquidbounce.features.module.modules.client.Target.deadValue
@@ -13,6 +14,7 @@ import net.ccbluex.liquidbounce.features.module.modules.client.Target.mobValue
 import net.ccbluex.liquidbounce.features.module.modules.client.Target.playerValue
 import net.ccbluex.liquidbounce.features.module.modules.other.AntiBot.isBot
 import net.ccbluex.liquidbounce.features.module.modules.other.Teams
+import net.ccbluex.liquidbounce.utils.extensions.eyes
 import net.ccbluex.liquidbounce.utils.render.ColorUtils.stripColor
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -143,5 +145,10 @@ object EntityUtils : MinecraftInstance() {
             health += entity.absorptionAmount
 
         return if (health > 0) health else 20f
+    }
+    fun Entity.getLookDistanceToEntityBox(entity: Entity =this, rotation: Rotation? = null, range: Double=10.0): Double {
+        val eyes = this.eyes
+        val end = (rotation?: RotationUtils.bestServerRotation())!!.toDirection().multiply(range).add(eyes)
+        return entity.entityBoundingBox.calculateIntercept(eyes, end)?.hitVec?.distanceTo(eyes) ?: Double.MAX_VALUE
     }
 }

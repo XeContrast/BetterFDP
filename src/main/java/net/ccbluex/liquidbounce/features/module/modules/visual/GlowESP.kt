@@ -99,7 +99,7 @@ class GlowESP : Module() {
     @EventTarget
     fun onrender2D(event: Render2DEvent?) {
         val sr = ScaledResolution(mc)
-        if (framebuffer != null && outlineFrameBuffer != null && !entities.isEmpty()) {
+        if (framebuffer != null && outlineFrameBuffer != null && entities.isNotEmpty()) {
             GlStateManager.enableAlpha()
             GlStateManager.alphaFunc(516, 0.0f)
             GlStateManager.enableBlend()
