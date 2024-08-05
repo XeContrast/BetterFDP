@@ -27,9 +27,7 @@ public class StaticStorage {
 
     public static ScaledResolution scaledResolution;
 
-    public static EnumFacing[] facings() {
-        return facings;
-    }
+    public static EnumFacing[] facings() {return facings; }
 
     public static EnumChatFormatting[] chatFormatting() {
         return chatFormatting;

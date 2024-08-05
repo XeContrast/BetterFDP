@@ -1,5 +1,6 @@
 package net.ccbluex.liquidbounce.utils.render
 
+import net.ccbluex.liquidbounce.FDPClient
 import net.ccbluex.liquidbounce.event.Render3DEvent
 import net.ccbluex.liquidbounce.features.module.modules.visual.CombatVisuals.DOUBLE_PI
 import net.ccbluex.liquidbounce.features.module.modules.visual.CombatVisuals.colorBlueTwoValue
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.RenderGlobal
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.util.AxisAlignedBB
+import net.minecraft.util.Vec3
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.util.glu.Cylinder
 import java.awt.Color
@@ -239,6 +241,7 @@ object CombatRender: MinecraftInstance() {
         disableSmoothLine()
         glPopMatrix()
     }
+
     @JvmStatic
     fun drawOnBorderedRect(x: Float, y: Float, x2: Float, y2: Float, width: Float, color1: Int, color2: Int) {
         drawRect(x, y, x2, y2, color2)
@@ -263,5 +266,70 @@ object CombatRender: MinecraftInstance() {
         glEnable(GL_TEXTURE_2D)
         glDisable(GL_BLEND)
         glDisable(GL_LINE_SMOOTH)
+    }
+    fun drawjello(color: Color) {
+        val it = FDPClient.combatManager.target
+        val drawTime = (System.currentTimeMillis() % 2000).toInt()
+        val drawMode=drawTime>1000
+        var drawPercent=drawTime/1000.0
+        //true when goes up
+        if(!drawMode){
+            drawPercent=1-drawPercent
+        }else{
+            drawPercent-=1
+        }
+        drawPercent=EaseUtils.easeInOutQuad(drawPercent)
+        val points = mutableListOf<Vec3>()
+        val bb= it!!.entityBoundingBox
+        val radius=bb.maxX-bb.minX
+        val height=bb.maxY-bb.minY
+        val posX = it.lastTickPosX + (it.posX - it.lastTickPosX) * mc.timer.renderPartialTicks
+        var posY = it.lastTickPosY + (it.posY - it.lastTickPosY) * mc.timer.renderPartialTicks
+        if(drawMode){
+            posY-=0.5
+        }else{
+            posY+=0.5
+        }
+        val posZ = it.lastTickPosZ + (it.posZ - it.lastTickPosZ) * mc.timer.renderPartialTicks
+        for(i in 0..360 step 7){
+            points.add(Vec3(posX - sin(i * Math.PI / 180F) * radius,posY+height*drawPercent,posZ + cos(i * Math.PI / 180F) * radius))
+        }
+        points.add(points[0])
+        //draw
+        mc.entityRenderer.disableLightmap()
+        glPushMatrix()
+        glDisable(GL_TEXTURE_2D)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_LINE_SMOOTH)
+        glEnable(GL_BLEND)
+        glDisable(GL_DEPTH_TEST)
+        glBegin(GL_LINE_STRIP)
+        val baseMove=(if(drawPercent>0.5){1-drawPercent}else{drawPercent})*2
+        val min=(height/60)*20*(1-baseMove)*(if(drawMode){-1}else{1})
+        for(i in 0..20) {
+            var moveFace=(height/60F)*i*baseMove
+            if(drawMode){
+                moveFace=-moveFace
+            }
+            val firstPoint=points[0]
+            glVertex3d(
+                firstPoint.xCoord - mc.renderManager.viewerPosX, firstPoint.yCoord - moveFace - min - mc.renderManager.viewerPosY,
+                firstPoint.zCoord - mc.renderManager.viewerPosZ
+            )
+            glColor4f(color.red.toFloat(), color.green.toFloat(), color.blue.toFloat(),0.7F*(i/20F))
+            for (vec3 in points) {
+                glVertex3d(
+                    vec3.xCoord - mc.renderManager.viewerPosX, vec3.yCoord - moveFace - min - mc.renderManager.viewerPosY,
+                    vec3.zCoord - mc.renderManager.viewerPosZ
+                )
+            }
+            glColor4f(0F, 0F, 0F,0F)
+        }
+        glEnd()
+        glEnable(GL_DEPTH_TEST)
+        glDisable(GL_LINE_SMOOTH)
+        glDisable(GL_BLEND)
+        glEnable(GL_TEXTURE_2D)
+        glPopMatrix()
     }
 }

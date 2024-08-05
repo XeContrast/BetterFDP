@@ -205,7 +205,7 @@ object TimerRange : Module() {
         }
         if (debug.get()) ClientUtils.displayChatMessage("Timer-ed")
         if (auraClick.get()) {
-            killAura?.clicks = killAura?.clicks!! + 1
+            killAura?.clicks = killAura!!.clicks + 1
             ++freezeTicks
             mc.runTick()
             if (debug.get()) ClientUtils.displayChatMessage("Clicked")
@@ -225,14 +225,14 @@ object TimerRange : Module() {
             reverseFreeze = false
             var time = reverseTickTime.get()
             working = true
-            if (reverseAuraClick .get() === "BeforeTimer") killAura?.clicks = killAura?.clicks!! + 1
+            if (reverseAuraClick .get() === "BeforeTimer") killAura?.clicks = killAura!!.clicks + 1
             while (time > 0) {
                 --time
                 mc.runTick()
             }
             working = false
             cooldown = reverseDelay.get()
-            if (reverseAuraClick .get() == "AfterTimer") killAura?.clicks = killAura?.clicks!! + 1
+            if (reverseAuraClick .get() == "AfterTimer") killAura?.clicks = killAura!!.clicks + 1
         }
         if (cooldown > 0) --cooldown
         return false

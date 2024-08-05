@@ -1,4 +1,4 @@
-package net.ccbluex.liquidbounce.features.module.modules.player.nofalls.other
+package net.ccbluex.liquidbounce.features.module.modules.player.nofalls.hypixel
 
 import net.ccbluex.liquidbounce.event.PacketEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent

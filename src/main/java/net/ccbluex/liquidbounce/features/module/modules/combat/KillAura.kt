@@ -88,7 +88,7 @@ object KillAura : Module() {
         ListValue("Swing", arrayOf("Normal", "Packet", "None"), "Normal").displayable { attackDisplay.get() }
 
     private val attackTimingValue =
-        ListValue("AttackTiming", arrayOf("All", "Pre", "Post", "Both"), "All").displayable { attackDisplay.get() }
+        ListValue("AttackTiming", arrayOf("All", "Pre", "Post"), "All").displayable { attackDisplay.get() }
     val sprintmode = ListValue("SprintMode", arrayOf("KeepSprint","Ground","StopSprint","StopMotion","Normal"),"KeepSprint").displayable { attackDisplay.get() }
 
     private val hitselectValue = BoolValue("HitSelect", false).displayable { attackDisplay.get() }

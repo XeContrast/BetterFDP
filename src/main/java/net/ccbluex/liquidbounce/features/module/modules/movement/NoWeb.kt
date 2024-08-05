@@ -38,10 +38,12 @@ class NoWeb : Module() {
         if (!mc.thePlayer.isInWeb) return
         mode.onUpdate()
     }
+
     @EventTarget
     fun onJump(event: JumpEvent) {
         mode.onJump(event)
     }
+
     override val tag: String
         get() = modeValue.get()
 

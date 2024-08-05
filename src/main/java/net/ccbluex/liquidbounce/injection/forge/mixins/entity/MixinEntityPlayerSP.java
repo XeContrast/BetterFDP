@@ -420,28 +420,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
             this.setSprinting(scaffold2.getCanSprint());
         }
         if (Objects.requireNonNull(scaffold).getState()) {
-            if (scaffold.getSprintModeValue().equals("PlaceOff")) {
-                this.setSprinting(scaffold.getRotationsValue().get() && !scaffold.getNoHitCheckValue().get() && (!scaffold.getFaceBlock() || !scaffold.getPlaceModeValue().get().equals("Legit")));
-            }
-            if (scaffold.getSprintModeValue().equals("PlaceOn")) {
-                this.setSprinting(false);
-            }
-            if (scaffold.getSprintModeValue().get() == "off"|| scaffold.getSprintModeValue().get()
-                    .equals("ground") && !mc.thePlayer.onGround || scaffold.getSprintModeValue().get()
-                    .equals("air") && mc.thePlayer.onGround ||
-                    scaffold.getSprintModeValue().get().equals("tellyticks") && scaffold.getOffGroundTicks() >= scaffold.getTellyTicks().get() ||
-                    scaffold.getSprintModeValue().get().equals("legit") && abs(MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw) - MathHelper.wrapAngleTo180_float(RotationUtils.targetRotation.getYaw())) > 90 || scaffold.getSprintModeValue().get().equals("watchdogtest") && !mc.thePlayer.onGround && !scaffold.towering())
-            {
-                this.setSprinting(false);
-            }
-            if (scaffold.towering()) {
-                if(scaffold.getTowerSprintModeValue().get() == "Off"){
-                    this.setSprinting(false);
-                }
-                if(scaffold.getTowerSprintModeValue().get() == "Always"){
-                    this.setSprinting(true);
-                }
-            }
+            this.setSprinting(scaffold.getCanSprint());
         }
         if ((killAura != null && killAura.getState()) && MovementUtils.INSTANCE.isMoving() && killAura.getCurrentTarget() != null) {
             if (killAura.getSprintmode().equals("Ground")) {

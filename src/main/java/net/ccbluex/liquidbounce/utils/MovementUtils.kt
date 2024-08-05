@@ -17,6 +17,9 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 object MovementUtils : MinecraftInstance() {
+    var getSpeed
+        get() = mc.thePlayer?.run { sqrt(motionX * motionX + motionZ * motionZ).toFloat() } ?: .0f
+        set(value) { strafe(value) }
 
     fun resetMotion(y: Boolean) {
         mc.thePlayer.motionX = 0.0

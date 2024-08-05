@@ -18,15 +18,22 @@ import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.features.value.IntegerValue
 import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.ui.font.GameFontRenderer.Companion.getColorIndex
+import net.ccbluex.liquidbounce.utils.render.BlendUtils
 import net.ccbluex.liquidbounce.utils.render.ColorUtils
+import net.ccbluex.liquidbounce.utils.render.ColorUtils.LiquidSlowly
+import net.ccbluex.liquidbounce.utils.render.ColorUtils.fade
 import net.ccbluex.liquidbounce.utils.render.CombatRender.drawCrystal
 import net.ccbluex.liquidbounce.utils.render.CombatRender.drawEntityBoxESP
 import net.ccbluex.liquidbounce.utils.render.CombatRender.drawPlatformESP
 import net.ccbluex.liquidbounce.utils.render.CombatRender.drawZavz
+import net.ccbluex.liquidbounce.utils.render.CombatRender.drawjello
+import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils.drawEntityBox
 import net.ccbluex.liquidbounce.utils.render.RenderUtils.drawPlatform
 import net.minecraft.block.Block
 import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.effect.EntityLightningBolt
 import net.minecraft.init.Blocks
@@ -40,7 +47,12 @@ import java.util.*
 object CombatVisuals : Module() {
 
     // Mark
-    private val markValue = ListValue("MarkMode", arrayOf("None", "Box", "RoundBox", "Head", "Mark", "Sims", "Zavz"), "Zavz")
+    private val colorModeValue = ListValue("Color", arrayOf("Custom", "Rainbow", "Sky", "LiquidSlowly", "Fade", "Mixer", "Health"), "Custom")
+    private val markValue = ListValue("MarkMode", arrayOf("None", "Box", "RoundBox", "Head", "Mark", "Sims","jello", "Zavz"), "Zavz")
+    private val saturationValue = FloatValue("Saturation", 1f, 0f, 1f)
+    private val brightnessValue = FloatValue("Brightness", 1f, 0f, 1f)
+    private val mixerSecondsValue = IntegerValue("Seconds", 2, 1, 10)
+    private val colorTeam = BoolValue("Team", false)
     private val isMarkMode: Boolean
         get() = markValue.get() != "None"
 
@@ -105,39 +117,69 @@ object CombatVisuals : Module() {
         when (markValue.get().lowercase()) {
             "box" -> drawEntityBoxESP(
                 entityLivingBase,
-                if ((hurt.get() && entityLivingBase.hurtTime > 3)) Color(255, 50, 50, 75) else color
+                getColor(combat.target)
             )
 
             "roundbox" -> drawEntityBox(
                 entityLivingBase,
-                if (hurt.get() && entityLivingBase.hurtTime > 3)
-                    Color(37, 126, 255, 70)
-                else
-                    Color(255, 0, 0, 70),
+                getColor(combat.target),
                 boxOutline.get()
             )
 
             "head" -> drawPlatformESP(
                 entityLivingBase,
-                if ((hurt.get() && entityLivingBase.hurtTime > 3)) Color(255, 50, 50, 75) else color
+                getColor(combat.target)
             )
 
             "mark" -> drawPlatform(
                 entityLivingBase,
-                if ((hurt.get() && entityLivingBase.hurtTime > 3)) Color(37, 126, 255, 70) else color
+                getColor(combat.target)
             )
 
             "sims" -> drawCrystal(
                 entityLivingBase,
-                if ((hurt.get() && entityLivingBase.hurtTime <= 0)) Color(80, 255, 80, 200).rgb else Color(255, 0, 0, 200).rgb,
+                getColor(combat.target).rgb,
                 event
             )
+
+            "jello" -> {
+                drawjello(
+                    getColor(combat.target)
+                )
+            }
 
             "zavz" -> drawZavz(
                 entityLivingBase,
                 event,
                 dual = true, // or false based on your requirement
             )
+        }
+    }
+    fun getColor(ent: Entity?): Color {
+        if (ent is EntityLivingBase) {
+            if (colorModeValue.equals("Health")) return BlendUtils.getHealthColor(
+                ent.health,
+                ent.maxHealth
+            )
+            if (colorTeam.get()) {
+                val chars = ent.displayName.formattedText.toCharArray()
+                var color = Int.MAX_VALUE
+                for (i in chars.indices) {
+                    if (chars[i] != '§' || i + 1 >= chars.size) continue
+                    val index = getColorIndex(chars[i + 1])
+                    if (index < 0 || index > 15) continue
+                    color = ColorUtils.hexColors[index]
+                    break
+                }
+                return Color(color)
+            }
+        }
+        return when (colorModeValue.get()) {
+            "Custom" -> Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
+            "Rainbow" -> Color(RenderUtils.getRainbowOpaque(mixerSecondsValue.get(), saturationValue.get(), brightnessValue.get(), 0))
+            "Sky" -> RenderUtils.skyRainbow(0, saturationValue.get(), brightnessValue.get())
+            "LiquidSlowly" -> LiquidSlowly(System.nanoTime(), 0, saturationValue.get(), brightnessValue.get())
+            else -> fade(Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get()), 0, 100)
         }
     }
 
