@@ -35,7 +35,7 @@ object HUD : Module() {
     val shadowValue = ListValue("TextShadowMode", arrayOf("LiquidBounce", "Outline", "Default", "Autumn"), "Default")
     private val clolormode = ListValue("ColorMode", arrayOf("Rainbow", "Light Rainbow", "Static", "Double Color", "Default"), "Light Rainbow")
     private val MusicDisplay = BoolValue("MusicDisplay",true)
-    val inventoryOnHotbar = BoolValue("InventoryOnHotbar", true)
+    val inventoryOnHotbar = BoolValue("InventoryOnHotbar", false)
     val hueInterpolation = BoolValue("HueInterpolation", false)
     val movingcolors = BoolValue("MovingColors", false)
     val inventoryParticle = BoolValue("InventoryParticle", false)

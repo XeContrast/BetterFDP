@@ -116,7 +116,7 @@ class Scaffold : Module() {
     ).displayable { moveOptions.get() }
     private val stopWhenBlockAboveValue = BoolValue("StopTowerWhenBlockAbove", true).displayable { moveOptions.get() }
     private val towerFakeJumpValue = BoolValue("TowerFakeJump", true).displayable { moveOptions.get() }
-    private val towerActiveValue = ListValue("TowerActivation", arrayOf("Always", "PressSpace", "NoMove", "OFF"), "PressSpace").displayable { moveOptions.get() }
+    private val towerActiveValue = ListValue("TowerActivation", arrayOf("Always", "PressSpace", "NoMove","OnlyMove", "OFF"), "PressSpace").displayable { moveOptions.get() }
     private val towerTimerValue = FloatValue("TowerTimer", 1f, 0.1f, 5f).displayable { moveOptions.get() }
 
 
@@ -596,6 +596,9 @@ class Scaffold : Module() {
                     towerStatus = !(mc.gameSettings.keyBindLeft.isKeyDown ||
                             mc.gameSettings.keyBindRight.isKeyDown || mc.gameSettings.keyBindForward.isKeyDown ||
                             mc.gameSettings.keyBindBack.isKeyDown) && mc.gameSettings.keyBindJump.isKeyDown
+                }
+                "onlymove" -> {
+                    towerStatus = MovementUtils.isMoving() && mc.gameSettings.keyBindJump.isKeyDown
                 }
             }
         }
